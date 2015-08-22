@@ -59,7 +59,7 @@ var _ = Describe("Runeparser", func() {
 
 	Context("Parsing a file", func() {
 		It("Should parse the test file", func() {
-			runes, err := RunesFromFile("runes.csv")
+			runes, err := RunesFromFile("runes.csv", true)
 			Expect(err).To(BeNil())
 			Expect(runes[0]).To(BeEquivalentTo(fehu))
 			Expect(runes[1]).To(BeEquivalentTo(uruz))

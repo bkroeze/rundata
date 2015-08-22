@@ -55,7 +55,7 @@ func RecordsToRunes(raw string, skipFirst bool) ([]Rune, error) {
 	return runes, nil
 }
 
-func RunesFromFile(filename string) ([]Rune, error) {
+func RunesFromFile(filename string, skipFirst bool) ([]Rune, error) {
 	raw, err := ioutil.ReadFile(filename)
 
 	if err != nil {
@@ -64,5 +64,5 @@ func RunesFromFile(filename string) ([]Rune, error) {
 
 	converted := string(raw[:])
 
-	return RecordsToRunes(converted, true)
+	return RecordsToRunes(converted, skipFirst)
 }
