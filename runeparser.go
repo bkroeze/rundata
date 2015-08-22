@@ -1,7 +1,6 @@
 package runedata
 
 import (
-	"fmt"
 	"io/ioutil"
 
 	"hillsorcerer.com/utils"
@@ -66,15 +65,4 @@ func RunesFromFile(filename string) ([]Rune, error) {
 	converted := string(raw[:])
 
 	return RecordsToRunes(converted, true)
-}
-
-func main() {
-
-	runes, err := RunesFromFile("runes.csv")
-
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("%+v\n", runes)
 }
