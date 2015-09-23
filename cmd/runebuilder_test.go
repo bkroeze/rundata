@@ -1,12 +1,16 @@
 package main_test
 
 import (
-	. "hillsorcerer.com/runedata/main"
+	//	. "hillsorcerer.com/runedata/cmd"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Runebuilder", func() {
-
+var _ = Describe("Runebuilder Command", func() {
+	Context("Basic Tests", func() {
+		It("Should pass", func() {
+			Expect(1).To(Equal(1))
+		})
+	})
 })
