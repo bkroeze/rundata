@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"hillsorcerer.com/runedata"
-	"hillsorcerer.com/utils"
+	"github.com/bkroeze/go.utils"
+	"github.com/bkroeze/runedata"
 
 	"github.com/codegangsta/cli"
 )

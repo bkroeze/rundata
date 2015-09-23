@@ -1,7 +1,7 @@
 package runedata_test
 
 import (
-	. "hillsorcerer.com/runedata"
+	. "github.com/bkroeze/runedata"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

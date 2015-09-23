@@ -1,7 +1,7 @@
 package main_test
 
 import (
-	//	. "hillsorcerer.com/runedata/cmd"
+	//	. "github.com/bkroeze/runedata/cmd"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

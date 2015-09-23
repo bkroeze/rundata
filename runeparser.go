@@ -3,7 +3,7 @@ package runedata
 import (
 	"io/ioutil"
 
-	"hillsorcerer.com/utils"
+	"github.com/bkroeze/go.utils"
 )
 
 type Rune struct {
