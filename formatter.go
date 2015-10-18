@@ -1,8 +1,11 @@
 package runedata
 
 import (
+	"bytes"
 	"fmt"
+	"os"
 	"strings"
+	"text/template"
 
 	"github.com/bkroeze/go.utils"
 )
@@ -73,4 +76,41 @@ func RunesToMDTable(runes []Rune) string {
 
 	out += "\n"
 	return out
+}
+
+func RuneFromName(runename string, runes []Rune) Rune {
+	var rune Rune
+	for i := 0; i < len(runes); i++ {
+		rune = runes[i]
+		if rune.Name == runename {
+			break
+		}
+	}
+	return rune
+}
+
+func RuneToMD(runename string, runes []Rune) string {
+	rune := RuneFromName(runename, runes)
+	const templ = `# &magick-{{.Name}}; {{.Name | ToProper}}`
+	t := template.New("Rune Template")
+
+	funcMap := template.FuncMap{
+		"ToProper": utils.ToProperCase,
+	}
+
+	t, err := t.Funcs(funcMap).Parse(templ)
+	checkError(err)
+
+	var data bytes.Buffer
+	err = t.Execute(&data, rune)
+	checkError(err)
+
+	return data.String()
+}
+
+func checkError(err error) {
+	if err != nil {
+		fmt.Println("Fatal error ", err.Error())
+		os.Exit(1)
+	}
 }

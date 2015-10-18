@@ -49,4 +49,23 @@ Rune          | Name              | Quick Notes
 		})
 	})
 
+	Context("Rune details parsing", func() {
+		It("Should insert details for a named rune", func() {
+			runes := make([]Rune, 2)
+			runes[0] = fehu
+			runes[1] = uruz
+
+			expected := "# &magick-fehu; Fehu"
+			formatted := RuneToMD("fehu", runes)
+			Expect(formatted).To(BeEquivalentTo(expected))
+		})
+	})
+
+	/*
+	   for future test
+	   	template := `<!-- rune:details:ac -->
+	   test
+	   <!-- /rune:details:ac -->`
+	*/
+
 })
