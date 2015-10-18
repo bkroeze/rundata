@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,46 +14,67 @@ import (
 	"github.com/codegangsta/cli"
 )
 
-func MakeRuneTable(filename, outdir, table string) error {
+func MakeRuneFile(filename, outdir, table string) (string, error) {
 	raw, err := ioutil.ReadFile(filename)
 
 	if err != nil {
-		return err
+		return table, err
 	}
 
 	template := string(raw[:])
 
-	fmt.Printf("index: %i", strings.Index(template, "<!-- runetable -->"))
-	formatted := utils.InsertTextBetween("<!-- runetable -->", "<!-- /runetable -->", template, table)
+	formatted := template[:]
 
-	println(formatted)
+	if strings.Index(template, "<!-- runetable -->") > -1 {
+		formatted = utils.InsertTextBetween("<!-- runetable -->", "<!-- /runetable -->", template, table)
+	}
+
+	return formatted, nil
+}
+
+func WriteOutfile(outdir, fname, text string) error {
+	outfile := filepath.Join(outdir, filepath.Base(fname))
+	fmt.Printf("    Writing: %s\n", outfile)
+	err := ioutil.WriteFile(outfile, []byte(text), 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return nil
 }
 
-func RuneTableCmd(ctx *cli.Context) {
-	filename := ctx.String("runes")
-	println("Loading runes from: %s", filename)
+func RuneBuildCmd(ctx *cli.Context) {
+	filename := ctx.String("file")
+	fmt.Printf("Loading runes from: %s", filename)
 	runes, err := runedata.RunesFromFile(filename, true)
 
 	if err != nil {
 		panic(err)
 	}
 
-	filename = ctx.String("file")
 	files, err := filepath.Glob(filename)
 	if err != nil {
 		panic(err)
 	}
+
 	outdir := ctx.String("directory")
+	if len(files) > 0 {
+		err := os.MkdirAll(outdir, 0644) // o+rw,a+r
+		if err != nil {
+			panic(err)
+		}
+	}
 
 	runetable := runedata.RunesToMDTable(runes)
 
-	fmt.Printf("Building Rune Tables in \"%s\" for\n", outdir)
+	fmt.Printf("Building Rune Files in \"%s\" for\n", outdir)
 	for i := 0; i < len(files); i++ {
 		fmt.Printf("    %s\n", files[i])
-		MakeRuneTable(files[i], outdir, runetable)
+		formatted, err := MakeRuneFile(files[i], outdir, runetable)
+		if err != nil {
+			panic(err)
+		}
+		WriteOutfile(outdir, files[i], formatted)
 	}
-
 }
 
 func main() {
@@ -72,14 +94,14 @@ func main() {
 
 	app.Commands = []cli.Command{
 		{
-			Name:  "table",
-			Usage: "Insert a rune table",
+			Name:  "build",
+			Usage: "Build files",
 			Flags: []cli.Flag{
 				runeflag,
 				cli.StringFlag{
 					Name:  "file, f",
 					Value: "templates/*",
-					Usage: "file to use as the template",
+					Usage: "files to use as the template",
 				},
 				cli.StringFlag{
 					Name:  "directory, d",
@@ -87,13 +109,7 @@ func main() {
 					Usage: "Output directory",
 				},
 			},
-			Action: RuneTableCmd,
-		}, {
-			Name:  "detail",
-			Usage: "Write rune details",
-			Action: func(c *cli.Context) {
-				println("writing details into: ", c.Args().First())
-			},
+			Action: RuneBuildCmd,
 		},
 	}
 

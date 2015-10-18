@@ -13,15 +13,6 @@ var _ = Describe("Formatter", func() {
 	fehu := Rune{Name: "fehu", Traditional: "Wealth"}
 	uruz := Rune{Name: "uruz", Traditional: "Aurochs"}
 
-	Context("Utility", func() {
-		It("Should get the max lengths of strings", func() {
-			data := make([][]string, 2)
-			data[0] = []string{"one", "two"}
-			data[1] = []string{"three", "four"}
-			theLengths := GetMaxLengthsOfStrings(data)
-			Expect(theLengths).To(BeEquivalentTo([]int{5, 4}))
-		})
-	})
 	Context("Table Format", func() {
 		It("Should return an MD formatted table for a single rune", func() {
 			singleLineTable := `
