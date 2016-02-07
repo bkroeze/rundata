@@ -29,6 +29,8 @@ func MakeRuneFile(filename, outdir, table string) (string, error) {
 		formatted = utils.InsertTextBetween("<!-- runetable -->", "<!-- /runetable -->", template, table)
 	}
 
+	// TODO: also do insertions for specific ruen files
+
 	return formatted, nil
 }
 
@@ -44,8 +46,9 @@ func WriteOutfile(outdir, fname, text string) error {
 
 func RuneBuildCmd(ctx *cli.Context) {
 	filename := ctx.String("file")
-	fmt.Printf("Loading runes from: %s", filename)
-	runes, err := runedata.RunesFromFile(filename, true)
+	runefile := ctx.String("runes")
+	fmt.Printf("Loading runes from: %s", runefile)
+	runes, err := runedata.RunesFromFile(runefile, true)
 
 	if err != nil {
 		panic(err)
